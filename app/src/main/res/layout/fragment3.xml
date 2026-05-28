@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/new_report"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/color_primary"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_instructions"
+            android:textSize="15sp"
+            android:textColor="@color/color_on_surface_variant"
+            android:layout_marginBottom="32dp"/>
+
+        <!-- Type de voie Section -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/road_type"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.1"
+                    android:textStyle="bold"
+                    android:textColor="@color/color_primary"
+                    android:textAllCaps="true"
+                    android:layout_marginBottom="12dp"/>
+
+                <RadioGroup
+                    android:id="@+id/radio_group_context"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio_highway"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/highway"
+                        android:textColor="@color/color_on_surface"
+                        android:buttonTint="@color/color_primary"
+                        android:checked="true"/>
+
+                    <RadioButton
+                        android:id="@+id/radio_urban"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/urban_zone"
+                        android:textColor="@color/color_on_surface"
+                        android:buttonTint="@color/color_primary"/>
+
+                </RadioGroup>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Title Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_issue_title"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/issue_title_hint"
+            app:startIconDrawable="@android:drawable/ic_menu_edit"
+            app:startIconTint="@color/color_primary"
+            app:endIconMode="custom"
+            app:endIconDrawable="@android:drawable/ic_btn_speak_now"
+            app:endIconTint="@color/color_on_surface_variant"
+            app:endIconContentDescription="@string/voice_input"
+            android:layout_marginBottom="20dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_issue_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
+                android:textColor="@color/color_on_surface"
+                android:maxLines="1"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Description Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_issue_description"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/issue_description_hint"
+            app:endIconMode="custom"
+            app:endIconDrawable="@android:drawable/ic_btn_speak_now"
+            app:endIconTint="@color/color_on_surface_variant"
+            app:endIconContentDescription="@string/voice_input"
+            android:layout_marginBottom="24dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_issue_description"
+                android:layout_width="match_parent"
+                android:layout_height="89dp"
+                android:gravity="top"
+                android:inputType="textCapSentences|textMultiLine"
+                android:minLines="5"
+                android:textColor="@color/color_on_surface" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/incident_time"
+            android:textSize="12sp"
+            android:letterSpacing="0.1"
+            android:textStyle="bold"
+            android:textColor="@color/color_primary"
+            android:textAllCaps="true"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Time Picker Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp">
+
+            <TimePicker
+                android:id="@+id/time_picker"
+                android:layout_width="match_parent"
+                android:layout_height="112dp"
+                android:timePickerMode="spinner" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Submit Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_validate"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="@string/validate_report"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="16dp"
+            android:backgroundTint="@color/color_primary"
+            app:elevation="16dp"/>
+
+    </LinearLayout>
+</ScrollView>

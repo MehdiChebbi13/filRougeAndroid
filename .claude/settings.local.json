@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew.bat :app:compileDebugJavaWithJavac --console=plain)",
+      "Bash(./gradlew.bat :app:mergeDebugResources --console=plain --rerun-tasks)",
+      "Bash(xxd)"
+    ]
+  }
+}

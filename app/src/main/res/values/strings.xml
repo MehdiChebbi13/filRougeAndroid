@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">filRouge</string>
+    <string name="toolbar_title">Fil rouge vide</string>
+    <string name="main_title">Watchout app</string>
+    <string name="btn_defaut">DEFAUT</string>
+    <string name="btn_stop">STOP</string>
+    <string name="btn_option1">CARTE</string>
+    <string name="fragment_title">Main Fragment</string>
+    <string name="fragment_desc">this app automatically inflates by Android system because this Fragment is static</string>
+    <string name="btn_go">GO</string>
+    <string name="avatar_desc">Avatar</string>
+    <string name="menu_title">Menu</string>
+    <string name="frag2">fragment 2</string>
+    <string name="frag3">fragment 3</string>
+    <string name="frag4">Statut de l\'incident</string>
+    <string name="frag5">Carte des incidents</string>
+    <string name="frag6">fragment 6</string>
+    <string name="frag7">fragment 7</string>
+    <string name="testIssue">Innondation Chaussée</string>
+    <string name="testPriority">[MEDIUM]</string>
+    <string name="priority_desc">Priorité de l\'incident</string>
+
+    <!-- Strings for Fragment 3 -->
+    <string name="new_report">Nouveau signalement</string>
+    <string name="report_instructions">Renseignez les informations de l\'incident</string>
+    <string name="road_type">Type de voie</string>
+    <string name="highway">Autoroute</string>
+    <string name="urban_zone">Zone urbaine</string>
+    <string name="issue_title_hint">Titre de l\'incident</string>
+    <string name="issue_description_hint">Description</string>
+    <string name="incident_time">Heure de l\'incident</string>
+    <string name="validate_report">Valider le signalement</string>
+    <string name="voice_input">Saisie vocale</string>
+
+    <!-- Strings for Fragment 4 (issue detail) -->
+    <string name="placeholder_select_issue">Sélectionnez un incident dans la liste</string>
+    <string name="placeholder_location">Localisation à venir</string>
+    <string name="label_priority">Priorité</string>
+    <string name="label_status">Statut</string>
+    <string name="label_reported_on">Signalé le %1$s</string>
+</resources>

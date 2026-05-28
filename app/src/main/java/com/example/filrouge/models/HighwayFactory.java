@@ -1,0 +1,23 @@
+package com.example.filrouge.models;
+
+import com.example.filrouge.Interfaces.AccidentFactory;
+import com.example.filrouge.Services.EmergencyService;
+
+public class HighwayFactory implements AccidentFactory {
+
+    // Geolocation defaults: random position within roughly +/- 5 km of Paris.
+    private static final double BASE_LAT = 48.8566;
+    private static final double BASE_LNG = 2.3522;
+    private static final double SPREAD  = 0.05;
+
+    @Override
+    public Issue createIssue(String title, String description) {
+        double latitude  = BASE_LAT + (Math.random() - 0.5) * 2 * SPREAD;
+        double longitude = BASE_LNG + (Math.random() - 0.5) * 2 * SPREAD;
+        Issue issue = new HighwayIssue(title, description,
+                Priority.CRITICAL, Status.REPORTED,
+                latitude, longitude);
+        issue.addObserver(EmergencyService.getInstance());
+        return issue;
+    }
+}
