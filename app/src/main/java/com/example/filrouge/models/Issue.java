@@ -31,6 +31,13 @@ public abstract   class Issue implements Parcelable,IssueObservable{
     // Constructeur mis à jour avec géolocalisation
     public Issue(String title, String description, Priority priority, Status status,
                  double latitude, double longitude) {
+        this(title, description, priority, status, latitude, longitude,
+                System.currentTimeMillis());
+    }
+
+    // Constructeur avec horodatage explicite (utile pour les jeux de données simulés)
+    public Issue(String title, String description, Priority priority, Status status,
+                 double latitude, double longitude, long timestamp) {
         this.id = UUID.randomUUID().toString();
         this.title = title;
         this.description = description;
@@ -38,7 +45,7 @@ public abstract   class Issue implements Parcelable,IssueObservable{
         this.status = status;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.timestamp = System.currentTimeMillis();
+        this.timestamp = timestamp;
     }
 
     // --- Implémentation de Parcelable ---

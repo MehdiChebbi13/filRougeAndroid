@@ -14,6 +14,11 @@ public class HighwayFactory implements AccidentFactory {
     public Issue createIssue(String title, String description) {
         double latitude  = BASE_LAT + (Math.random() - 0.5) * 2 * SPREAD;
         double longitude = BASE_LNG + (Math.random() - 0.5) * 2 * SPREAD;
+        return createIssue(title, description, latitude, longitude);
+    }
+
+    @Override
+    public Issue createIssue(String title, String description, double latitude, double longitude) {
         Issue issue = new HighwayIssue(title, description,
                 Priority.CRITICAL, Status.REPORTED,
                 latitude, longitude);

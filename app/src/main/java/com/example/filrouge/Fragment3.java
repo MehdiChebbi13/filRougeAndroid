@@ -122,10 +122,17 @@ public class Fragment3 extends Fragment {
         hour = timePicker.getHour();
         minute = timePicker.getMinute();
         String time = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+
+        // Detect the user's current location so the new incident is placed there.
+        double[] me = {48.8566, 2.3522}; // Paris fallback
+        if (requireActivity() instanceof ControlActivity) {
+            me = ((ControlActivity) requireActivity()).getFreshUserLatLng();
+        }
+
         if (selectedId == R.id.radio_highway) {
-            return new HighwayFactory().createIssue(title, description);
+            return new HighwayFactory().createIssue(title, description, me[0], me[1]);
         } else if (selectedId == R.id.radio_urban) {
-            return new UrbanFactory().createIssue(title, description);
+            return new UrbanFactory().createIssue(title, description, me[0], me[1]);
         } else {
             Toast.makeText(getContext(), "Veuillez choisir un type", Toast.LENGTH_SHORT).show();
             return null;

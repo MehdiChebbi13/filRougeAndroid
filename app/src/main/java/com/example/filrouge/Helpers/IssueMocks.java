@@ -10,83 +10,100 @@ import com.example.filrouge.models.UrbanIssue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class IssueMocks {
 
-    // Deterministic grid around Paris so demo markers always land in the
-    // same positions across runs (5 columns, ~0.005° step ≈ 500 m).
-    private static final double BASE_LAT = 48.8566;
-    private static final double BASE_LNG = 2.3522;
-    private static final double STEP     = 0.005;
-    private static final int    COLS     = 5;
+    // Fallback anchor (Paris) used when no device location is available.
+    private static final double FALLBACK_LAT = 48.8566;
+    private static final double FALLBACK_LNG = 2.3522;
 
-    public List<Issue> seed(){
+    // Incidents are scattered randomly around the anchor between these distances.
+    private static final double MIN_DISTANCE_M = 200;
+    private static final double MAX_DISTANCE_M = 10_000;
+    private static final double METERS_PER_DEG_LAT = 111_320.0;
+
+    private final Random random = new Random();
+
+    private double anchorLat = FALLBACK_LAT;
+    private double anchorLng = FALLBACK_LNG;
+
+    /** Seed around the fallback (Paris) anchor. */
+    public List<Issue> seed() {
+        return seed(FALLBACK_LAT, FALLBACK_LNG);
+    }
+
+    /** Seed the demo incidents in a tight grid around the given anchor. */
+    public List<Issue> seed(double anchorLat, double anchorLng) {
+        this.anchorLat = anchorLat;
+        this.anchorLng = anchorLng;
+
         List<Issue> issueList = new ArrayList<>();
 
         // Incidents de type "Danger Immédiat"
         addHighway(issueList, "Accident grave A7",
                 "Collision entre deux poids lourds, voie de gauche bloquée",
-                Priority.CRITICAL, Status.ON_SITE);
+                Priority.CRITICAL, Status.ON_SITE, 2);
 
         addHighway(issueList, "Véhicule à contresens",
                 "Signalé sur la rocade Sud au niveau de la sortie 12",
-                Priority.CRITICAL, Status.REPORTED);
+                Priority.CRITICAL, Status.REPORTED, 6);
 
         addHighway(issueList, "Obstacle sur la chaussée",
                 "Perte de chargement (palettes) sur la voie centrale",
-                Priority.HIGH, Status.CONFIRMED);
+                Priority.HIGH, Status.CONFIRMED, 12);
 
         // Incidents de type "Travaux et Ralentissements"
         addHighway(issueList, "Bouchon massif",
                 "Ralentissement de 5km suite à un rétrécissement de chaussée",
-                Priority.HIGH, Status.REPORTED);
+                Priority.HIGH, Status.REPORTED, 18);
 
         addHighway(issueList, "Travaux de nuit",
                 "Peinture au sol en cours, circulation sur une seule voie",
-                Priority.MEDIUM, Status.ON_SITE);
+                Priority.MEDIUM, Status.ON_SITE, 27);
 
         addUrban(issueList, "Panne de signalisation",
                 "Feux tricolores HS à l'intersection Jean Jaurès",
-                Priority.HIGH, Status.REPORTED);
+                Priority.HIGH, Status.REPORTED, 35);
 
         // Incidents de type "Météo et Visibilité"
         addHighway(issueList, "Brouillard givrant",
                 "Visibilité inférieure à 50 mètres sur le secteur forestier",
-                Priority.MEDIUM, Status.CONFIRMED);
+                Priority.MEDIUM, Status.CONFIRMED, 48);
 
         addHighway(issueList, "Inondation chaussée",
                 "Forte pluie, risque d'aquaplaning sur la bretelle d'accès",
-                Priority.MEDIUM, Status.REPORTED);
+                Priority.MEDIUM, Status.REPORTED, 65);
 
         addHighway(issueList, "Présence de verglas",
                 "Pont suspendu glissant, saleuse en route",
-                Priority.HIGH, Status.ON_SITE);
+                Priority.HIGH, Status.ON_SITE, 90);
 
         // Incidents de type "Divers"
         addHighway(issueList, "Véhicule en panne",
                 "Voiture sur la bande d'arrêt d'urgence, triangle posé",
-                Priority.LOW, Status.CLEARING);
+                Priority.LOW, Status.CLEARING, 120);
 
         addHighway(issueList, "Animal errant",
                 "Chien signalé aux abords de la départementale D10",
-                Priority.MEDIUM, Status.REPORTED);
+                Priority.MEDIUM, Status.REPORTED, 150);
 
         addUrban(issueList, "Nid-de-poule profond",
                 "Risque de crevaison sur la voie de droite",
-                Priority.LOW, Status.CONFIRMED);
+                Priority.LOW, Status.CONFIRMED, 180);
 
         // Extras
         addUrban(issueList, "Manifestation",
                 "Cortège avançant lentement en centre-ville",
-                Priority.MEDIUM, Status.ON_SITE);
+                Priority.MEDIUM, Status.ON_SITE, 240);
 
         addUrban(issueList, "Débris de verre",
                 "Suite à un bris de glace, nettoyage nécessaire",
-                Priority.LOW, Status.RESOLVED);
+                Priority.LOW, Status.RESOLVED, 300);
 
         addUrban(issueList, "Route barrée",
                 "Fermeture exceptionnelle pour un événement sportif",
-                Priority.MEDIUM, Status.CLEARING);
+                Priority.MEDIUM, Status.CLEARING, 360);
 
         // Plug the singleton "brain" onto every mock issue so status / priority
         // changes are reported automatically (loose coupling: the Issue does
@@ -100,17 +117,30 @@ public class IssueMocks {
     }
 
     private void addHighway(List<Issue> list, String title, String description,
-                            Priority priority, Status status) {
-        int idx = list.size();
-        list.add(new HighwayIssue(title, description, priority, status, latFor(idx), lngFor(idx)));
+                            Priority priority, Status status, int minutesAgo) {
+        double[] pos = randomNearbyLatLng();
+        list.add(new HighwayIssue(title, description, priority, status,
+                pos[0], pos[1], timestampFor(minutesAgo)));
     }
 
     private void addUrban(List<Issue> list, String title, String description,
-                          Priority priority, Status status) {
-        int idx = list.size();
-        list.add(new UrbanIssue(title, description, priority, status, latFor(idx), lngFor(idx)));
+                          Priority priority, Status status, int minutesAgo) {
+        double[] pos = randomNearbyLatLng();
+        list.add(new UrbanIssue(title, description, priority, status,
+                pos[0], pos[1], timestampFor(minutesAgo)));
     }
 
-    private static double latFor(int idx) { return BASE_LAT + (idx / COLS) * STEP; }
-    private static double lngFor(int idx) { return BASE_LNG + (idx % COLS) * STEP; }
+    /** A random {lat, lng} between MIN and MAX distance from the anchor. */
+    private double[] randomNearbyLatLng() {
+        double distance = MIN_DISTANCE_M + random.nextDouble() * (MAX_DISTANCE_M - MIN_DISTANCE_M);
+        double bearing = random.nextDouble() * 2 * Math.PI;
+        double dLat = (distance * Math.cos(bearing)) / METERS_PER_DEG_LAT;
+        double dLng = (distance * Math.sin(bearing))
+                / (METERS_PER_DEG_LAT * Math.cos(Math.toRadians(anchorLat)));
+        return new double[]{anchorLat + dLat, anchorLng + dLng};
+    }
+
+    private static long timestampFor(int minutesAgo) {
+        return System.currentTimeMillis() - minutesAgo * 60_000L;
+    }
 }

@@ -16,4 +16,12 @@
     <color name="color_on_surface">#212121</color>
     <color name="color_on_surface_variant">#616161</color>
     <color name="color_background">#F5F5F5</color>
+
+    <!-- Header & Toggle Colors -->
+    <color name="header_start_color">#4177FF</color>
+    <color name="header_end_color">#2C46E0</color>
+    <color name="white_translucent">#B3FFFFFF</color>
+    <color name="white_more_translucent">#40FFFFFF</color>
+    <color name="toggle_bg_color">#26000000</color>
+    <color name="toggle_selected_text">#2C46E0</color>
 </resources>

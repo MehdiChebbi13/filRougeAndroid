@@ -10,7 +10,7 @@
     <string name="btn_go">GO</string>
     <string name="avatar_desc">Avatar</string>
     <string name="menu_title">Menu</string>
-    <string name="frag2">fragment 2</string>
+    <string name="frag2">Incidents</string>
     <string name="frag3">fragment 3</string>
     <string name="frag4">Statut de l\'incident</string>
     <string name="frag5">Carte des incidents</string>
@@ -25,7 +25,7 @@
     <string name="report_instructions">Renseignez les informations de l\'incident</string>
     <string name="road_type">Type de voie</string>
     <string name="highway">Autoroute</string>
-    <string name="urban_zone">Zone urbaine</string>
+    <string name="urban_zone">Urbain</string>
     <string name="issue_title_hint">Titre de l\'incident</string>
     <string name="issue_description_hint">Description</string>
     <string name="incident_time">Heure de l\'incident</string>
@@ -38,4 +38,19 @@
     <string name="label_priority">Priorité</string>
     <string name="label_status">Statut</string>
     <string name="label_reported_on">Signalé le %1$s</string>
+
+    <!-- Strings for Header -->
+    <string name="incidents_subtitle">A7 · 24 signalements actifs</string>
+
+    <!-- Strings for incident list item -->
+    <string name="placeholder_distance">2,3 km</string>
+    <string name="placeholder_eta">5 min</string>
+
+    <string-array name="status_options">
+        <item>Signalé</item>
+        <item>Confirmé</item>
+        <item>Sur place</item>
+        <item>Dégagement</item>
+        <item>Résolu</item>
+    </string-array>
 </resources>

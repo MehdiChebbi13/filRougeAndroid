@@ -1,11 +1,18 @@
 package com.example.filrouge;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -24,10 +31,27 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
 
     private final String TAG = "frallo "+getClass().getSimpleName();
     private static final String DATA_MENU_NUMBER = "num";
+    private static final int REQ_LOCATION = 1001;
+    // Anchor used to seed mock incidents + compute distances. Defaults to Paris
+    // until the device's real location is resolved.
+    private double userLat = 48.8566;
+    private double userLng = 2.3522;
+    private boolean initialized = false;
+    private boolean shouldCommitFragments = true;
+
     private int currentIndex;
     private Fragment mainFragment;
     private MenuFragment menu;
     private final List<Issue> issues = new ArrayList<>();
+
+    /** Current user anchor as {lat, lng} (real location or Paris fallback). */
+    public double[] getUserLatLng() { return new double[]{userLat, userLng}; }
+
+    /** Re-reads the device location (if permitted) and returns the fresh anchor. */
+    public double[] getFreshUserLatLng() {
+        resolveAnchorFromLocation();
+        return getUserLatLng();
+    }
 
     private Fragment[] tabFragments = {new Screen1Fragment(), new Fragment2(),new Fragment3(), new Fragment4(), new Fragment5(), new Fragment6(), new Fragment7()};
 
@@ -45,22 +69,89 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
             currentIndex = intent.getIntExtra(EXTRA_INDEX,0);
             Log.d(TAG,"received menu#"+currentIndex);
         }
-        Bundle args = new Bundle();
-        args.putInt(EXTRA_INDEX, currentIndex);
 
+        shouldCommitFragments = savedInstanceState == null;
 
-        issues.addAll(new IssueMocks().seed());
-        if (savedInstanceState == null) {
-            menu=new MenuFragment();
-            menu.setArguments(args);
-            mainFragment = tabFragments[currentIndex];
-            FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_menu_container,menu);
-            transaction.replace(R.id.fragment_container,mainFragment);
-            transaction.commit();
+        // Resolve the device location to anchor the mock incidents "near me".
+        if (hasLocationPermission()) {
+            resolveAnchorFromLocation();
+            initContent();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQ_LOCATION);
+        }
+    }
+
+    private boolean hasLocationPermission() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /** Updates {@link #userLat}/{@link #userLng} from the freshest last-known fix. */
+    private void resolveAnchorFromLocation() {
+        if (!hasLocationPermission()) {
+            return; // keep the Paris fallback
+        }
+        try {
+            LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+            if (lm == null) return;
+            Location best = null;
+            for (String provider : new String[]{LocationManager.GPS_PROVIDER,
+                    LocationManager.NETWORK_PROVIDER, LocationManager.PASSIVE_PROVIDER}) {
+                try {
+                    Location loc = lm.getLastKnownLocation(provider);
+                    if (loc != null && (best == null || loc.getTime() > best.getTime())) {
+                        best = loc;
+                    }
+                } catch (IllegalArgumentException ignored) {
+                    // provider not available on this device
+                }
+            }
+            if (best != null) {
+                userLat = best.getLatitude();
+                userLng = best.getLongitude();
+                Log.d(TAG, "anchor set to device location " + userLat + ", " + userLng);
+            }
+        } catch (SecurityException ignored) {
+            // permission revoked between check and read -> keep fallback
+        }
+    }
+
+    /** Seeds the mock incidents around the anchor and commits the first screen. */
+    private void initContent() {
+        if (initialized) return;
+        initialized = true;
+
+        issues.clear();
+        issues.addAll(new IssueMocks().seed(userLat, userLng));
+
+        if (!shouldCommitFragments) {
+            return; // rotation: the system restores the fragments itself
         }
 
+        Bundle args = new Bundle();
+        args.putInt(EXTRA_INDEX, currentIndex);
+        menu = new MenuFragment();
+        menu.setArguments(args);
+        mainFragment = tabFragments[currentIndex];
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_menu_container, menu);
+        transaction.replace(R.id.fragment_container, mainFragment);
+        transaction.commit();
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQ_LOCATION) {
+            resolveAnchorFromLocation(); // falls back to Paris if still denied
+            initContent();
+        }
     }
 
 

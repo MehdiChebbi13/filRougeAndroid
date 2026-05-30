@@ -12,6 +12,11 @@ public class HighwayIssue extends Issue implements Parcelable {
         super(title, description, priority, status, latitude, longitude);
     }
 
+    public HighwayIssue(String title, String description, Priority priority, Status status,
+                        double latitude, double longitude, long timestamp) {
+        super(title, description, priority, status, latitude, longitude, timestamp);
+    }
+
     protected HighwayIssue(Parcel in) {
         super(in);
     }

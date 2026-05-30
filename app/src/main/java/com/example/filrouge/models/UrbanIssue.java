@@ -9,6 +9,11 @@ public class UrbanIssue extends Issue implements Parcelable {
         super(title, description, priority, status, latitude, longitude);
     }
 
+    public UrbanIssue(String title, String description, Priority priority, Status status,
+                      double latitude, double longitude, long timestamp) {
+        super(title, description, priority, status, latitude, longitude, timestamp);
+    }
+
     protected UrbanIssue(Parcel in) {
         super(in);
     }
