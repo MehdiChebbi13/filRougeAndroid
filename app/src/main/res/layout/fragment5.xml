@@ -2,24 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fond"
     android:orientation="vertical">
 
-    <!-- Moitié haute : carte Google Maps -->
+    <!-- Titre en haut -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:background="#0091FF"
+        android:paddingStart="16dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="14dp"
+        android:text="Incidents à proximité"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Carte Google Maps avec fond et marges -->
     <fragment
         android:id="@+id/map_fragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="#0062DC" />
 
-    <!-- Moitié basse : liste des incidents visibles sur la carte -->
+    <!-- Liste des incidents visibles -->
     <ListView
         android:id="@+id/list_visible_issues"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#FFFFFF"
-        android:divider="#E0E0E0"
-        android:dividerHeight="1dp" />
+        android:background="#CC8EBAE5"
+        android:divider="#AAAAAA"
+        android:dividerHeight="1dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp" />
 
 </LinearLayout>

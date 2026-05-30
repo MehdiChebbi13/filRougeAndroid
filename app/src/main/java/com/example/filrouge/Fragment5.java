@@ -91,7 +91,15 @@ public class Fragment5 extends Fragment
         // ListView du bas
         listView = view.findViewById(R.id.list_visible_issues);
         listAdapter = new ArrayAdapter<>(requireContext(),
-                android.R.layout.simple_list_item_1, visibleTitles);
+                android.R.layout.simple_list_item_1, visibleTitles) {
+            @Override
+            public android.view.View getView(int position, android.view.View convertView, android.view.ViewGroup parent) {
+                android.widget.TextView tv = (android.widget.TextView) super.getView(position, convertView, parent);
+                tv.setTextColor(android.graphics.Color.BLACK);
+                tv.setPadding(8, 18, 8, 18);
+                return tv;
+            }
+        };
         listView.setAdapter(listAdapter);
 
         // Carte
