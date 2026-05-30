@@ -20,6 +20,7 @@ import com.example.filrouge.Helpers.IssueMocks;
 import com.example.filrouge.Interfaces.Menuable;
 import com.example.filrouge.Interfaces.Notifiable;
 import com.example.filrouge.Interfaces.Picturable;
+import com.example.filrouge.Interfaces.ViewObserver;
 import com.example.filrouge.models.Issue;
 import com.example.filrouge.models.IssueController;
 import com.example.filrouge.models.IssueManager;
@@ -169,6 +170,15 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
 
     @Override
     public void onDataChange(int numFragment, Object object, int actionCode, Object argsAction) {
+        // Fragment5 (the map) signals it is ready → wire up the MVC pipeline so
+        // its markers actually load. Without this the controller stays null and
+        // onMapReady() never calls initialLoad(), leaving an empty, world-zoomed map.
+        if (object instanceof ViewObserver
+                && numFragment == Fragment5.FRAGMENT_ID
+                && actionCode == Fragment5.CODE_READY) {
+            wireMapMvc((ViewObserver) object);
+            return;
+        }
         if (!(object instanceof Issue)) {
             return;
         }
@@ -196,10 +206,34 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
                 break;
             case CREATE:
                 issues.add(issue);
+                // Keep the map's model in sync so the new incident appears as a marker.
+                if (issueManager != null) {
+                    issueManager.getIssues().add(issue);
+                    issueManager.notifyAllObservers();
+                }
                 break;
         }
     }
 
+
+    /**
+     * Connects the map view (Fragment5) to its controller/model. The manager is
+     * seeded with the current incident list and the fragment is registered as a
+     * {@link ViewObserver}. We then push an initial update: it renders markers
+     * immediately if the map is already ready, otherwise onMapReady() will pull
+     * the data via {@code controller.initialLoad()}.
+     */
+    private void wireMapMvc(ViewObserver view) {
+        issueManager = new IssueManager(issues);
+        issueController = new IssueController(issueManager);
+        issueController.setView(view);
+        issueManager.addObserver(view);
+        if (view instanceof Fragment5) {
+            ((Fragment5) view).setController(issueController);
+        }
+        // Covers the race where the map became ready before this wiring ran.
+        issueManager.notifyAllObservers();
+    }
 
     @Override
     public void onFragmentDisplayed(int fragmentIndex) {
