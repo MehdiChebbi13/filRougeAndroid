@@ -13,6 +13,8 @@ import com.example.filrouge.Helpers.IssueMocks;
 import com.example.filrouge.Interfaces.Menuable;
 import com.example.filrouge.Interfaces.Notifiable;
 import com.example.filrouge.models.Issue;
+import com.example.filrouge.models.IssueController;
+import com.example.filrouge.models.IssueManager;
 import com.example.filrouge.models.Status;
 
 import java.util.ArrayList;
@@ -21,6 +23,9 @@ import java.util.List;
 public class ControlActivity extends AppCompatActivity implements Menuable, Notifiable {
     public static final String EXTRA_INDEX = "index";
     private static final String DATA_IS_STARTING = "sauvegarde";
+
+    private IssueManager issueManager;
+    private IssueController issueController;
 
     private final String TAG = "frallo "+getClass().getSimpleName();
     private static final String DATA_MENU_NUMBER = "num";
@@ -50,6 +55,8 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
 
 
         issues.addAll(new IssueMocks().seed());
+        issueManager = new IssueManager(issues);
+        issueController = new IssueController(issueManager);
         if (savedInstanceState == null) {
             menu=new MenuFragment();
             menu.setArguments(args);
@@ -71,6 +78,14 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
 
     @Override
     public void onDataChange(int numFragment, Object object, int actionCode, Object argsAction) {
+        if (actionCode == Fragment5.CODE_READY && object instanceof Fragment5) {
+            Fragment5 vue = (Fragment5) object;
+            vue.setController(issueController);
+            issueController.setView(vue);
+            issueManager.addObserver(vue);
+            issueManager.notifyAllObservers(); // déclenche l'affichage initial
+            return;
+        }
         if (!(object instanceof Issue)) {
             return;
         }
