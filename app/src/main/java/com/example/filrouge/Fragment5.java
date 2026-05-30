@@ -46,6 +46,8 @@ public class Fragment5 extends Fragment
     private ListView listView;
     private ArrayAdapter<String> listAdapter;
     private final List<String> visibleTitles = new ArrayList<>();
+    private List<Issue> lastIssues = new ArrayList<>();
+    private boolean initialCameraSet = false;
 
     // ------------------------------------------------------------------ lifecycle
 
@@ -113,6 +115,7 @@ public class Fragment5 extends Fragment
     @Override
     public void update(List<Issue> issues) {
         if (googleMap == null) return;
+        this.lastIssues = issues;
         displayMarkers(issues);
         updateListView(issues);
     }
@@ -128,10 +131,8 @@ public class Fragment5 extends Fragment
         map.setOnMarkerClickListener(this);
         map.setOnMarkerDragListener(this);
 
-        // Quand la caméra s'arrête (scroll ou zoom), on rafraîchit la liste
-        map.setOnCameraIdleListener(() -> {
-            if (controller != null) controller.updateVisibleIssues(googleMap);
-        });
+        // Quand la caméra s'arrête (scroll ou zoom), on rafraîchit seulement la liste
+        map.setOnCameraIdleListener(() -> updateListView(lastIssues));
 
         // Affichage initial
         if (controller != null) controller.initialLoad(googleMap);
@@ -154,11 +155,14 @@ public class Fragment5 extends Fragment
             bounds.include(pos);
         }
 
-        final LatLngBounds finalBounds = bounds.build();
-        View root = getView();
-        if (root != null) {
-            root.post(() -> googleMap.moveCamera(
-                    CameraUpdateFactory.newLatLngBounds(finalBounds, 100)));
+        if (!initialCameraSet) {
+            initialCameraSet = true;
+            final LatLngBounds finalBounds = bounds.build();
+            View root = getView();
+            if (root != null) {
+                root.post(() -> googleMap.moveCamera(
+                        CameraUpdateFactory.newLatLngBounds(finalBounds, 100)));
+            }
         }
     }
 
