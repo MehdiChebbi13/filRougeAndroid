@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="#FFFFFF">
 
+    <!-- Photo ou placeholder -->
     <ImageView
         android:id="@+id/picture"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scaleType="centerCrop"
-        android:src="@android:drawable/ic_menu_camera" />
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:padding="8dp"
+        android:src="@drawable/appareil_photo" />
 
+    <!-- Bouton en bas à droite comme dans la capture -->
     <Button
         android:id="@+id/takePicture"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Prendre une photo" />
+        android:layout_gravity="bottom|end"
+        android:layout_margin="12dp"
+        android:backgroundTint="#9C27B0"
+        android:text="Take Picture"
+        android:textColor="#FFFFFF" />
 
-</LinearLayout>
+</FrameLayout>

@@ -136,7 +136,13 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
     @Override
     public void onMenuClick(int position) {
         currentIndex = position;
-        Fragment fragment=tabFragments[currentIndex];
+        Fragment fragment;
+        // Fragment4 (position 3) : on recharge l'issue courante si elle existe
+        if (position == 3 && currentIssue != null) {
+            fragment = Fragment4.newInstance(currentIssue);
+        } else {
+            fragment = tabFragments[currentIndex];
+        }
 
         FragmentTransaction transaction=getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)

@@ -36,7 +36,7 @@ public class CameraFragment extends Fragment {
     private final String TAG = "frallo " + getClass().getSimpleName();
 
     private ImageView picture;
-    private boolean isPictureTaken       = false;
+    private boolean isPictureTaken       = true; // true = ne pas ouvrir la caméra automatiquement
     private boolean isFirstLaunchChecked = false;
     private File    photoFile;
     private Picturable picturable;
