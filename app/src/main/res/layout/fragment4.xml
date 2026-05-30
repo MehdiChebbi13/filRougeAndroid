@@ -50,6 +50,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Mini carte de localisation de l'incident -->
+            <fragment
+                android:id="@+id/map_fragment4"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="16dp" />
+
             <!-- Title row: priority icon + title -->
             <LinearLayout
                 android:layout_width="match_parent"

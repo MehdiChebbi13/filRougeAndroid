@@ -15,6 +15,12 @@ import androidx.fragment.app.Fragment;
 import com.example.filrouge.Interfaces.Notifiable;
 import com.example.filrouge.models.Issue;
 import com.example.filrouge.models.Priority;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -99,6 +105,21 @@ public class Fragment4 extends Fragment {
         timestamp.setText(getString(R.string.label_reported_on, formattedDate));
 
         priorityIcon.setImageResource(priorityDrawable(issue.getPriority()));
+
+        // Carte mini avec le pin de l'incident
+        SupportMapFragment mapFrag = (SupportMapFragment)
+                getChildFragmentManager().findFragmentById(R.id.map_fragment4);
+        if (mapFrag != null) {
+            mapFrag.getMapAsync(googleMap -> {
+                LatLng pos = new LatLng(issue.getLatitude(), issue.getLongitude());
+                googleMap.addMarker(new MarkerOptions()
+                        .position(pos)
+                        .title(issue.getTitle()));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15f));
+                googleMap.getUiSettings().setAllGesturesEnabled(false); // mini carte non déplaçable
+                googleMap.getUiSettings().setZoomControlsEnabled(false);
+            });
+        }
 
         // Injecte CameraFragment dans le conteneur
         if (savedInstanceState == null) {
