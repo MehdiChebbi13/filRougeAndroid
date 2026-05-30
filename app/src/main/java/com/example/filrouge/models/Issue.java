@@ -21,6 +21,7 @@ public abstract   class Issue implements Parcelable,IssueObservable{
     private final long timestamp;
     private double latitude;
     private double longitude;
+    private String picture;
     private Priority priority;
     private Status status;
 
@@ -41,6 +42,13 @@ public abstract   class Issue implements Parcelable,IssueObservable{
         this.timestamp = System.currentTimeMillis();
     }
 
+    public String getPicture() { return picture; }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+        notifyObservers(); // notifie les vues comme pour setStatus
+    }
+
     public void setLatitude(double latitude){
         this.latitude = latitude ;
     }
@@ -59,6 +67,7 @@ public abstract   class Issue implements Parcelable,IssueObservable{
         status = Status.valueOf(in.readString());
         latitude = in.readDouble();
         longitude = in.readDouble();
+        picture = in.readString();
     }
 
     @Override
@@ -71,6 +80,7 @@ public abstract   class Issue implements Parcelable,IssueObservable{
         dest.writeString(status.name());
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
+        dest.writeString(picture);
     }
 
     @Override

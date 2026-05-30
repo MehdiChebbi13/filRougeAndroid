@@ -99,6 +99,20 @@ public class Fragment4 extends Fragment {
         timestamp.setText(getString(R.string.label_reported_on, formattedDate));
 
         priorityIcon.setImageResource(priorityDrawable(issue.getPriority()));
+
+        // Injecte CameraFragment dans le conteneur
+        if (savedInstanceState == null) {
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.camera_fragment_container, new CameraFragment())
+                    .commit();
+        }
+
+        // Si l'issue a déjà une photo, on l'envoie à CameraFragment via le canal
+        if (issue.getPicture() != null && !issue.getPicture().isEmpty()) {
+            android.os.Bundle result = new android.os.Bundle();
+            result.putString("photo_path", issue.getPicture());
+            getChildFragmentManager().setFragmentResult("picture_channel", result);
+        }
     }
 
     private int priorityDrawable(Priority priority) {

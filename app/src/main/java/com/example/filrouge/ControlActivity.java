@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.filrouge.Helpers.IssueMocks;
 import com.example.filrouge.Interfaces.Menuable;
 import com.example.filrouge.Interfaces.Notifiable;
+import com.example.filrouge.Interfaces.Picturable;
 import com.example.filrouge.models.Issue;
 import com.example.filrouge.models.IssueController;
 import com.example.filrouge.models.IssueManager;
@@ -20,7 +21,7 @@ import com.example.filrouge.models.Status;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ControlActivity extends AppCompatActivity implements Menuable, Notifiable {
+public class ControlActivity extends AppCompatActivity implements Menuable, Notifiable, Picturable {
     public static final String EXTRA_INDEX = "index";
     private static final String DATA_IS_STARTING = "sauvegarde";
 
@@ -33,6 +34,7 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
     private Fragment mainFragment;
     private MenuFragment menu;
     private final List<Issue> issues = new ArrayList<>();
+    private Issue currentIssue; // issue actuellement affichée dans Fragment4
 
     private Fragment[] tabFragments = {new Screen1Fragment(), new Fragment2(),new Fragment3(), new Fragment4(), new Fragment5(), new Fragment6(), new Fragment7()};
 
@@ -96,6 +98,7 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
         Issue issue = (Issue) object;
         switch (actions[actionCode]) {
             case DISPLAY:
+                currentIssue = issue;
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, Fragment4.newInstance(issue))
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -149,6 +152,14 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
         transaction.commit();
 
 
+    }
+
+    @Override
+    public void onPictureTaken(String photopath) {
+        Log.d(TAG, "Photo reçue : " + photopath);
+        if (currentIssue != null) {
+            currentIssue.setPicture(photopath);
+        }
     }
 
     @Override
