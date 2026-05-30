@@ -19,8 +19,8 @@ public abstract   class Issue implements Parcelable,IssueObservable{
     private final String title;
     private final String description;
     private final long timestamp;
-    private final double latitude;
-    private final double longitude;
+    private double latitude;
+    private double longitude;
     private Priority priority;
     private Status status;
 
@@ -46,6 +46,14 @@ public abstract   class Issue implements Parcelable,IssueObservable{
         this.latitude = latitude;
         this.longitude = longitude;
         this.timestamp = timestamp;
+    }
+
+    public void setLatitude(double latitude){
+        this.latitude = latitude ;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     // --- Implémentation de Parcelable ---

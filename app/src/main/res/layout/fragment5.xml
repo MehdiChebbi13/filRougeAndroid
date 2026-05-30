@@ -1,54 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fond">
+    android:background="@drawable/fond"
+    android:orientation="vertical">
 
-    <!-- Background overlay (kept from previous design) -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#CC2196F3" />
-
-    <!-- Title overlay on top of the map area -->
+    <!-- Titre en haut -->
     <TextView
-        android:id="@+id/tv_map_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:background="#80000000"
-        android:paddingStart="12dp"
-        android:paddingTop="6dp"
-        android:paddingEnd="12dp"
-        android:paddingBottom="6dp"
-        android:text="@string/frag5"
+        android:layout_marginTop="28dp"
+        android:background="#0091FF"
+        android:paddingStart="16dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="14dp"
+        android:text="Incidents à proximité"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
-    <!-- 50% horizontal guideline splits map (top) from empty area (bottom) -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_half"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
-
-    <!-- Top half: Google Map -->
+    <!-- Carte Google Maps avec fond et marges -->
     <fragment
         android:id="@+id/map_fragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/guideline_half"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_weight="1"
+        android:background="#0062DC" />
 
-    <!-- Bottom half: intentionally empty, reserved for later -->
+    <!-- Liste des incidents visibles -->
+    <ListView
+        android:id="@+id/list_visible_issues"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#CC8EBAE5"
+        android:divider="#AAAAAA"
+        android:dividerHeight="1dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

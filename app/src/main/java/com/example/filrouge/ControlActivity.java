@@ -20,6 +20,8 @@ import com.example.filrouge.Helpers.IssueMocks;
 import com.example.filrouge.Interfaces.Menuable;
 import com.example.filrouge.Interfaces.Notifiable;
 import com.example.filrouge.models.Issue;
+import com.example.filrouge.models.IssueController;
+import com.example.filrouge.models.IssueManager;
 import com.example.filrouge.models.Status;
 
 import java.util.ArrayList;
@@ -28,6 +30,9 @@ import java.util.List;
 public class ControlActivity extends AppCompatActivity implements Menuable, Notifiable {
     public static final String EXTRA_INDEX = "index";
     private static final String DATA_IS_STARTING = "sauvegarde";
+
+    private IssueManager issueManager;
+    private IssueController issueController;
 
     private final String TAG = "frallo "+getClass().getSimpleName();
     private static final String DATA_MENU_NUMBER = "num";
