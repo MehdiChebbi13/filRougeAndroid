@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "947200877911",
+    "project_id": "fil-rouge-2c534",
+    "storage_bucket": "fil-rouge-2c534.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947200877911:android:484c977aba372fcef3ca12",
+        "android_client_info": {
+          "package_name": "com.example.filrouge"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPKP6_457Rth9MoRaUpw8LywraQ5RpvUc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

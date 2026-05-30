@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.filrouge.Helpers.IssueMocks;
 import com.example.filrouge.Interfaces.Menuable;
 import com.example.filrouge.Interfaces.Notifiable;
+import com.example.filrouge.Interfaces.Picturable;
 import com.example.filrouge.models.Issue;
 import com.example.filrouge.models.IssueController;
 import com.example.filrouge.models.IssueManager;
@@ -27,7 +28,7 @@ import com.example.filrouge.models.Status;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ControlActivity extends AppCompatActivity implements Menuable, Notifiable {
+public class ControlActivity extends AppCompatActivity implements Menuable, Notifiable, Picturable {
     public static final String EXTRA_INDEX = "index";
     private static final String DATA_IS_STARTING = "sauvegarde";
 
@@ -48,6 +49,7 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
     private Fragment mainFragment;
     private MenuFragment menu;
     private final List<Issue> issues = new ArrayList<>();
+    private Issue currentIssue; // issue actuellement affichée dans Fragment4
 
     /** Current user anchor as {lat, lng} (real location or Paris fallback). */
     public double[] getUserLatLng() { return new double[]{userLat, userLng}; }
@@ -177,6 +179,7 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
         Issue issue = (Issue) object;
         switch (actions[actionCode]) {
             case DISPLAY:
+                currentIssue = issue;
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, Fragment4.newInstance(issue))
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -214,7 +217,13 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
     @Override
     public void onMenuClick(int position) {
         currentIndex = position;
-        Fragment fragment=tabFragments[currentIndex];
+        Fragment fragment;
+        // Fragment4 (position 3) : on recharge l'issue courante si elle existe
+        if (position == 3 && currentIssue != null) {
+            fragment = Fragment4.newInstance(currentIssue);
+        } else {
+            fragment = tabFragments[currentIndex];
+        }
 
         FragmentTransaction transaction=getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
@@ -230,6 +239,14 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
         transaction.commit();
 
 
+    }
+
+    @Override
+    public void onPictureTaken(String photopath) {
+        Log.d(TAG, "Photo reçue : " + photopath);
+        if (currentIssue != null) {
+            currentIssue.setPicture(photopath);
+        }
     }
 
     @Override

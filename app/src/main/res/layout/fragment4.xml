@@ -116,26 +116,12 @@
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
 
-            <!-- Location placeholder -->
-            <FrameLayout
+            <!-- CameraFragment container -->
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/camera_fragment_container"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginTop="16dp">
-
-                <View
-                    android:id="@+id/placeholder_location"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#80808080" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/placeholder_location"
-                    android:textColor="#E0FFFFFF"
-                    android:textSize="14sp" />
-            </FrameLayout>
+                android:layout_height="260dp"
+                android:layout_marginTop="16dp" />
 
         </LinearLayout>
     </ScrollView>
