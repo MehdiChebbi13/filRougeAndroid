@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">filRouge</string>
-    <string name="toolbar_title">Fil rouge vide</string>
-    <string name="main_title">Watchout app</string>
+    <string name="toolbar_title">Projet Fil Rouge</string>
+    <string name="main_title">RouteClear</string>
     <string name="btn_defaut">DEFAUT</string>
     <string name="btn_stop">STOP</string>
     <string name="btn_option1">CARTE</string>
