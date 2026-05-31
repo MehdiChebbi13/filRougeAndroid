@@ -39,8 +39,7 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
     private final String TAG = "frallo "+getClass().getSimpleName();
     private static final String DATA_MENU_NUMBER = "num";
     private static final int REQ_LOCATION = 1001;
-    // Anchor used to seed mock incidents + compute distances. Defaults to Paris
-    // until the device's real location is resolved.
+
     private double userLat = 48.8566;
     private double userLng = 2.3522;
     private boolean initialized = false;
@@ -50,19 +49,16 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
     private Fragment mainFragment;
     private MenuFragment menu;
     private final List<Issue> issues = new ArrayList<>();
-    private Issue currentIssue; // issue actuellement affichée dans Fragment4
+    private Issue currentIssue; 
 
-    /** Current user anchor as {lat, lng} (real location or Paris fallback). */
     public double[] getUserLatLng() { return new double[]{userLat, userLng}; }
 
-    /** Re-reads the device location (if permitted) and returns the fresh anchor. */
     public double[] getFreshUserLatLng() {
         resolveAnchorFromLocation();
         return getUserLatLng();
     }
 
     private Fragment[] tabFragments = {new Screen1Fragment(), new Fragment2(),new Fragment3(), new Fragment4(), new Fragment5(), new Fragment6(), new Fragment7()};
-
 
     public List<Issue> getIssues(){ return issues;}
     private boolean isStarting= true;
@@ -80,7 +76,6 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
 
         shouldCommitFragments = savedInstanceState == null;
 
-        // Resolve the device location to anchor the mock incidents "near me".
         if (hasLocationPermission()) {
             resolveAnchorFromLocation();
             initContent();
@@ -99,10 +94,9 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
                 == PackageManager.PERMISSION_GRANTED;
     }
 
-    /** Updates {@link #userLat}/{@link #userLng} from the freshest last-known fix. */
     private void resolveAnchorFromLocation() {
         if (!hasLocationPermission()) {
-            return; // keep the Paris fallback
+            return; 
         }
         try {
             LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -116,7 +110,7 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
                         best = loc;
                     }
                 } catch (IllegalArgumentException ignored) {
-                    // provider not available on this device
+
                 }
             }
             if (best != null) {
@@ -125,11 +119,10 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
                 Log.d(TAG, "anchor set to device location " + userLat + ", " + userLng);
             }
         } catch (SecurityException ignored) {
-            // permission revoked between check and read -> keep fallback
+
         }
     }
 
-    /** Seeds the mock incidents around the anchor and commits the first screen. */
     private void initContent() {
         if (initialized) return;
         initialized = true;
@@ -138,7 +131,7 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
         issues.addAll(new IssueMocks().seed(userLat, userLng));
 
         if (!shouldCommitFragments) {
-            return; // rotation: the system restores the fragments itself
+            return; 
         }
 
         Bundle args = new Bundle();
@@ -157,11 +150,10 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQ_LOCATION) {
-            resolveAnchorFromLocation(); // falls back to Paris if still denied
+            resolveAnchorFromLocation(); 
             initContent();
         }
     }
-
 
     @Override
     public void onClick(int numFragment) {
@@ -170,9 +162,7 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
 
     @Override
     public void onDataChange(int numFragment, Object object, int actionCode, Object argsAction) {
-        // Fragment5 (the map) signals it is ready → wire up the MVC pipeline so
-        // its markers actually load. Without this the controller stays null and
-        // onMapReady() never calls initialLoad(), leaving an empty, world-zoomed map.
+
         if (object instanceof ViewObserver
                 && numFragment == Fragment5.FRAGMENT_ID
                 && actionCode == Fragment5.CODE_READY) {
@@ -206,7 +196,7 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
                 break;
             case CREATE:
                 issues.add(issue);
-                // Keep the map's model in sync so the new incident appears as a marker.
+
                 if (issueManager != null) {
                     issueManager.getIssues().add(issue);
                     issueManager.notifyAllObservers();
@@ -215,14 +205,6 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
         }
     }
 
-
-    /**
-     * Connects the map view (Fragment5) to its controller/model. The manager is
-     * seeded with the current incident list and the fragment is registered as a
-     * {@link ViewObserver}. We then push an initial update: it renders markers
-     * immediately if the map is already ready, otherwise onMapReady() will pull
-     * the data via {@code controller.initialLoad()}.
-     */
     private void wireMapMvc(ViewObserver view) {
         issueManager = new IssueManager(issues);
         issueController = new IssueController(issueManager);
@@ -231,7 +213,7 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
         if (view instanceof Fragment5) {
             ((Fragment5) view).setController(issueController);
         }
-        // Covers the race where the map became ready before this wiring ran.
+
         issueManager.notifyAllObservers();
     }
 
@@ -239,9 +221,9 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
     public void onFragmentDisplayed(int fragmentIndex) {
         if (fragmentIndex != currentIndex) {
             currentIndex = fragmentIndex;
-            // Find the menu fragment and tell it to update its highlighted item
+
             MenuFragment menuFragment = (MenuFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.fragment_menu_container); // adjust the ID
+                    .findFragmentById(R.id.fragment_menu_container); 
             if (menuFragment != null) {
                 menuFragment.updateSelection(currentIndex);
             }
@@ -252,7 +234,7 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
     public void onMenuClick(int position) {
         currentIndex = position;
         Fragment fragment;
-        // Fragment4 (position 3) : on recharge l'issue courante si elle existe
+
         if (position == 3 && currentIssue != null) {
             fragment = Fragment4.newInstance(currentIssue);
         } else {
@@ -263,15 +245,14 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
                 .replace(R.id.fragment_container, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         if (!isStarting) {
-            // Si ce n'est plus le démarrage, on veut pouvoir revenir en arrière
+
             transaction.addToBackStack(null);
         } else {
-            // C'est le premier appel (auto), on ne l'ajoute pas à la pile car on ne veut pas pouvoir revenir en arrière
+
             isStarting = false;
         }
 
         transaction.commit();
-
 
     }
 
@@ -289,7 +270,6 @@ public class ControlActivity extends AppCompatActivity implements Menuable, Noti
         outState.putBoolean(DATA_IS_STARTING, isStarting);
         outState.putInt(DATA_MENU_NUMBER, currentIndex);
     }
-
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {

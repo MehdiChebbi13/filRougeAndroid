@@ -1,6 +1,5 @@
 package com.example.filrouge.models;
 
-
 public enum Status {
 
     REPORTED(1.0f),
@@ -20,10 +19,10 @@ public enum Status {
     }
 
     public static Status fromRating(float rating) {
-        int idx = Math.round(rating) - 1; // 1.0 -> REPORTED ... 5.0 -> RESOLVED
+        int idx = Math.round(rating) - 1; 
         if (idx >= 0 && idx < values().length) {
             return values()[idx];
         }
-        return null; // e.g. 0 stars -> unmapped
+        return null; 
     }
 }

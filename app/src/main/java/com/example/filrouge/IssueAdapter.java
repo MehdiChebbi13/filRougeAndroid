@@ -59,10 +59,8 @@ public class IssueAdapter<T> extends ArrayAdapter<T> {
 
         Issue currentIssue = (Issue) items.get(position);
 
-        // Distance from the user's anchor (real GPS location or fallback).
         distance.setText(formatDistance(currentIssue));
 
-        // Relative reported time, e.g. "il y a 12 min".
         eta.setText(DateUtils.getRelativeTimeSpanString(
                 currentIssue.getTimestamp(),
                 System.currentTimeMillis(),
@@ -89,25 +87,23 @@ public class IssueAdapter<T> extends ArrayAdapter<T> {
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         status.setAdapter(statusAdapter);
 
-        // Set the current value before attaching the listener so the initial
-        // programmatic selection is not reported as a user-driven change.
         final int currentOrdinal = currentIssue.getStatus().ordinal();
         status.setSelection(currentOrdinal, false);
 
         status.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                // Spinner fires once on bind; only forward genuine changes.
+
                 if (pos == currentOrdinal) {
                     return;
                 }
-                float rating = pos + 1f; // Spinner position -> Status rating (1..5)
+                float rating = pos + 1f; 
                 callBackFragment.onRatingBarChange(position, rating, IssueAdapter.this, items);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // no-op
+
             }
         });
 
@@ -115,7 +111,6 @@ public class IssueAdapter<T> extends ArrayAdapter<T> {
         return layoutItem;
     }
 
-    /** Distance between the user anchor and the issue, e.g. "1,2 km" or "850 m". */
     private String formatDistance(Issue issue) {
         Context ctx = callBackFragment.getContext();
         if (!(ctx instanceof ControlActivity)) {

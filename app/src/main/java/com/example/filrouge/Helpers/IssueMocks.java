@@ -1,6 +1,5 @@
 package com.example.filrouge.Helpers;
 
-
 import com.example.filrouge.Services.EmergencyService;
 import com.example.filrouge.models.HighwayIssue;
 import com.example.filrouge.models.Issue;
@@ -14,11 +13,9 @@ import java.util.Random;
 
 public class IssueMocks {
 
-    // Fallback anchor (Paris) used when no device location is available.
     private static final double FALLBACK_LAT = 48.8566;
     private static final double FALLBACK_LNG = 2.3522;
 
-    // Incidents are scattered randomly around the anchor between these distances.
     private static final double MIN_DISTANCE_M = 200;
     private static final double MAX_DISTANCE_M = 10_000;
     private static final double METERS_PER_DEG_LAT = 111_320.0;
@@ -28,19 +25,16 @@ public class IssueMocks {
     private double anchorLat = FALLBACK_LAT;
     private double anchorLng = FALLBACK_LNG;
 
-    /** Seed around the fallback (Paris) anchor. */
     public List<Issue> seed() {
         return seed(FALLBACK_LAT, FALLBACK_LNG);
     }
 
-    /** Seed the demo incidents in a tight grid around the given anchor. */
     public List<Issue> seed(double anchorLat, double anchorLng) {
         this.anchorLat = anchorLat;
         this.anchorLng = anchorLng;
 
         List<Issue> issueList = new ArrayList<>();
 
-        // Incidents de type "Danger Immédiat"
         addHighway(issueList, "Accident grave A7",
                 "Collision entre deux poids lourds, voie de gauche bloquée",
                 Priority.CRITICAL, Status.ON_SITE, 2);
@@ -53,7 +47,6 @@ public class IssueMocks {
                 "Perte de chargement (palettes) sur la voie centrale",
                 Priority.HIGH, Status.CONFIRMED, 12);
 
-        // Incidents de type "Travaux et Ralentissements"
         addHighway(issueList, "Bouchon massif",
                 "Ralentissement de 5km suite à un rétrécissement de chaussée",
                 Priority.HIGH, Status.REPORTED, 18);
@@ -66,7 +59,6 @@ public class IssueMocks {
                 "Feux tricolores HS à l'intersection Jean Jaurès",
                 Priority.HIGH, Status.REPORTED, 35);
 
-        // Incidents de type "Météo et Visibilité"
         addHighway(issueList, "Brouillard givrant",
                 "Visibilité inférieure à 50 mètres sur le secteur forestier",
                 Priority.MEDIUM, Status.CONFIRMED, 48);
@@ -79,7 +71,6 @@ public class IssueMocks {
                 "Pont suspendu glissant, saleuse en route",
                 Priority.HIGH, Status.ON_SITE, 90);
 
-        // Incidents de type "Divers"
         addHighway(issueList, "Véhicule en panne",
                 "Voiture sur la bande d'arrêt d'urgence, triangle posé",
                 Priority.LOW, Status.CLEARING, 120);
@@ -92,7 +83,6 @@ public class IssueMocks {
                 "Risque de crevaison sur la voie de droite",
                 Priority.LOW, Status.CONFIRMED, 180);
 
-        // Extras
         addUrban(issueList, "Manifestation",
                 "Cortège avançant lentement en centre-ville",
                 Priority.MEDIUM, Status.ON_SITE, 240);
@@ -105,9 +95,6 @@ public class IssueMocks {
                 "Fermeture exceptionnelle pour un événement sportif",
                 Priority.MEDIUM, Status.CLEARING, 360);
 
-        // Plug the singleton "brain" onto every mock issue so status / priority
-        // changes are reported automatically (loose coupling: the Issue does
-        // not know which observer is listening).
         EmergencyService brain= EmergencyService.getInstance();
         for (Issue issue : issueList) {
             issue.addObserver(brain);
@@ -130,7 +117,6 @@ public class IssueMocks {
                 pos[0], pos[1], timestampFor(minutesAgo)));
     }
 
-    /** A random {lat, lng} between MIN and MAX distance from the anchor. */
     private double[] randomNearbyLatLng() {
         double distance = MIN_DISTANCE_M + random.nextDouble() * (MAX_DISTANCE_M - MIN_DISTANCE_M);
         double bearing = random.nextDouble() * 2 * Math.PI;

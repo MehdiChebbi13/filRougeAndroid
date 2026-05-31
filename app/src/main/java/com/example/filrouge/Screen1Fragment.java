@@ -54,7 +54,6 @@ public class Screen1Fragment extends Fragment {
         }
     }
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,7 +71,6 @@ public class Screen1Fragment extends Fragment {
         }
 
         return view;
-
 
     }
 

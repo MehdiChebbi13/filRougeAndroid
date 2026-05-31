@@ -27,16 +27,12 @@ public abstract   class Issue implements Parcelable,IssueObservable{
 
     private transient List<IssueObserver> observers= new ArrayList<>();
 
-
-
-    // Constructeur mis à jour avec géolocalisation
     public Issue(String title, String description, Priority priority, Status status,
                  double latitude, double longitude) {
         this(title, description, priority, status, latitude, longitude,
                 System.currentTimeMillis());
     }
 
-    // Constructeur avec horodatage explicite (utile pour les jeux de données simulés)
     public Issue(String title, String description, Priority priority, Status status,
                  double latitude, double longitude, long timestamp) {
         this.id = UUID.randomUUID().toString();
@@ -53,7 +49,7 @@ public abstract   class Issue implements Parcelable,IssueObservable{
 
     public void setPicture(String picture) {
         this.picture = picture;
-        notifyObservers(); // notifie les vues comme pour setStatus
+        notifyObservers(); 
     }
 
     public void setLatitude(double latitude){
@@ -64,7 +60,6 @@ public abstract   class Issue implements Parcelable,IssueObservable{
         this.longitude = longitude;
     }
 
-    // --- Implémentation de Parcelable ---
     protected Issue(Parcel in) {
         id = in.readString();
         title = in.readString();
@@ -95,7 +90,6 @@ public abstract   class Issue implements Parcelable,IssueObservable{
         return 0;
     }
 
-    // --- Getters ---
     public String getId() { return id; }
     public String getTitle() { return title; }
     public String getDescription() { return description; }
@@ -117,9 +111,7 @@ public abstract   class Issue implements Parcelable,IssueObservable{
         }
     }
 
-
     public abstract String getSafetyProtocol();
-
 
     @NonNull
     @Override
@@ -127,10 +119,9 @@ public abstract   class Issue implements Parcelable,IssueObservable{
         return title + " [" + priority + "] - Status: " + status;
     }
 
-    // --- Implémentation de Observable ---
     @Override
     public void addObserver(IssueObserver observer) {
-        if (observers == null) observers = new ArrayList<>();  //risque d'être null car transient
+        if (observers == null) observers = new ArrayList<>();  
         if (!observers.contains(observer)) {
             observers.add(observer);
         }
@@ -146,8 +137,7 @@ public abstract   class Issue implements Parcelable,IssueObservable{
     @Override
     public void notifyObservers() {
         if (observers == null) return;
-        // Iterate over a snapshot so an observer that unsubscribes itself
-        // during the callback does not provoke a ConcurrentModificationException.
+
         for (IssueObserver observer : new ArrayList<>(observers)) {
             try {
                 observer.onStatusChanged(this);

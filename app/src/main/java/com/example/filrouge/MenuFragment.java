@@ -14,11 +14,7 @@ import com.example.filrouge.Interfaces.Menuable;
 
 public class MenuFragment extends Fragment {
 
-
-
     private Menuable listener;
-
-
 
     private final int[] iconIds = {
             R.id.menu_icon_0, R.id.menu_icon_1, R.id.menu_icon_2,
@@ -64,11 +60,6 @@ public class MenuFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Public method called by the activity to keep the menu in sync
-     * with the currently displayed fragment (e.g. after a back press).
-     * Takes a position index, not a resource ID.
-     */
     public void updateSelection(int position) {
         View root = getView();
         if (root == null) return;

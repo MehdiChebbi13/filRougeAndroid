@@ -10,7 +10,6 @@ public class EmergencyService implements IssueObserver {
     private final String TAG = "frallo "+getClass().getSimpleName();
     private static EmergencyService instance;
 
-    // Constructeur privé pour le Singleton
     private EmergencyService() {}
 
     public static EmergencyService getInstance() {
@@ -31,6 +30,5 @@ public class EmergencyService implements IssueObserver {
     public void onPriorityChanged(Issue issue) {
         Log.d(TAG, "Nouvelle priorité [" + issue.getPriority() + "] sur : " + issue.getTitle());
     }
-
 
 }

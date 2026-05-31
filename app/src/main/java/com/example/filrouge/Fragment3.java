@@ -82,7 +82,6 @@ public class Fragment3 extends Fragment {
         return inflater.inflate(R.layout.fragment3, container, false);
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
@@ -90,7 +89,7 @@ public class Fragment3 extends Fragment {
         etDescription=view.findViewById(R.id.et_issue_description);
         tilTitle=view.findViewById(R.id.til_issue_title);
         tilDescription=view.findViewById(R.id.til_issue_description);
-        //For voice
+
         tilTitle.setEndIconOnClickListener(v -> startVoiceRecognition(etTitle));
         tilDescription.setEndIconOnClickListener(v -> startVoiceRecognition(etDescription));
 
@@ -123,8 +122,7 @@ public class Fragment3 extends Fragment {
         minute = timePicker.getMinute();
         String time = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
 
-        // Detect the user's current location so the new incident is placed there.
-        double[] me = {48.8566, 2.3522}; // Paris fallback
+        double[] me = {48.8566, 2.3522}; 
         if (requireActivity() instanceof ControlActivity) {
             me = ((ControlActivity) requireActivity()).getFreshUserLatLng();
         }
@@ -140,7 +138,6 @@ public class Fragment3 extends Fragment {
 
     }
 
-    // Launcher pour la reconnaissance vocale
     private final ActivityResultLauncher<Intent> voiceLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {

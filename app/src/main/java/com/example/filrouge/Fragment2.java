@@ -16,12 +16,10 @@ import com.example.filrouge.Interfaces.Notifiable;
 import com.example.filrouge.models.Issue;
 import java.util.List;
 
-
 public class Fragment2 extends Fragment implements ClickableIssue {
     private static final int FRAGMENT_ID= 1;
     private final String TAG = "frallo " + getClass().getSimpleName();
     private Notifiable notifiable;
-
 
     @Override
     public void onRatingBarChange(int itemIndex, float value, IssueAdapter adapter, List items) {
@@ -42,9 +40,7 @@ public class Fragment2 extends Fragment implements ClickableIssue {
     public Fragment2() {
         Log.d(TAG, "screenFragment type 2 created");
 
-
     }
-
 
     @Override
     public void onAttach(@NonNull Context context){
@@ -81,8 +77,5 @@ public class Fragment2 extends Fragment implements ClickableIssue {
 
         return view;
     }
-
-
-
 
 }

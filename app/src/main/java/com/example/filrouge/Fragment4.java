@@ -85,7 +85,7 @@ public class Fragment4 extends Fragment {
         Issue issue = (args != null) ? args.getParcelable(ARG_ISSUE) : null;
 
         if (issue == null) {
-            // Empty state: keep the placeholder title, clear the rest.
+
             title.setText(R.string.placeholder_select_issue);
             description.setText("");
             priority.setText("");
@@ -106,7 +106,6 @@ public class Fragment4 extends Fragment {
 
         priorityIcon.setImageResource(priorityDrawable(issue.getPriority()));
 
-        // Carte mini avec le pin de l'incident
         SupportMapFragment mapFrag = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.map_fragment4);
         if (mapFrag != null) {
@@ -116,19 +115,17 @@ public class Fragment4 extends Fragment {
                         .position(pos)
                         .title(issue.getTitle()));
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15f));
-                googleMap.getUiSettings().setAllGesturesEnabled(false); // mini carte non déplaçable
+                googleMap.getUiSettings().setAllGesturesEnabled(false); 
                 googleMap.getUiSettings().setZoomControlsEnabled(false);
             });
         }
 
-        // Injecte CameraFragment dans le conteneur
         if (savedInstanceState == null) {
             getChildFragmentManager().beginTransaction()
                     .replace(R.id.camera_fragment_container, new CameraFragment())
                     .commit();
         }
 
-        // Si l'issue a déjà une photo, on l'envoie à CameraFragment via le canal
         if (issue.getPicture() != null && !issue.getPicture().isEmpty()) {
             android.os.Bundle result = new android.os.Bundle();
             result.putString("photo_path", issue.getPicture());

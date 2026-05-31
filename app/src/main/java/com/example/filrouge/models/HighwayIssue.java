@@ -48,5 +48,4 @@ public class HighwayIssue extends Issue implements Parcelable {
         return "Do not try to avoid road blockage, it can be fatal.";
     }
 
-
 }

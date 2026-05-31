@@ -49,8 +49,6 @@ public class Fragment5 extends Fragment
     private List<Issue> lastIssues = new ArrayList<>();
     private boolean initialCameraSet = false;
 
-    // ------------------------------------------------------------------ lifecycle
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -74,8 +72,6 @@ public class Fragment5 extends Fragment
         if (notifiable != null) notifiable.onFragmentDisplayed(FRAGMENT_ID);
     }
 
-    // ------------------------------------------------------------------ view
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -88,7 +84,6 @@ public class Fragment5 extends Fragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // ListView du bas
         listView = view.findViewById(R.id.list_visible_issues);
         listAdapter = new ArrayAdapter<>(requireContext(),
                 android.R.layout.simple_list_item_1, visibleTitles) {
@@ -102,24 +97,19 @@ public class Fragment5 extends Fragment
         };
         listView.setAdapter(listAdapter);
 
-        // Carte
         SupportMapFragment mapFrag = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.map_fragment);
         if (mapFrag != null) mapFrag.getMapAsync(this);
 
-        // Signale à ControlActivity que la Vue est prête → elle câblera le MVC
         if (notifiable != null) {
             notifiable.onDataChange(FRAGMENT_ID, this, CODE_READY, null);
         }
     }
 
-    // ------------------------------------------------------------------ MVC
-
     public void setController(IssueController controller) {
         this.controller = controller;
     }
 
-    // Appelé par IssueManager quand les données changent (ex: marker déplacé)
     @Override
     public void update(List<Issue> issues) {
         if (googleMap == null) return;
@@ -127,8 +117,6 @@ public class Fragment5 extends Fragment
         displayMarkers(issues);
         updateListView(issues);
     }
-
-    // ------------------------------------------------------------------ carte
 
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
@@ -139,10 +127,8 @@ public class Fragment5 extends Fragment
         map.setOnMarkerClickListener(this);
         map.setOnMarkerDragListener(this);
 
-        // Quand la caméra s'arrête (scroll ou zoom), on rafraîchit seulement la liste
         map.setOnCameraIdleListener(() -> updateListView(lastIssues));
 
-        // Affichage initial
         if (controller != null) controller.initialLoad(googleMap);
     }
 
@@ -189,8 +175,6 @@ public class Fragment5 extends Fragment
         listAdapter.notifyDataSetChanged();
     }
 
-    // ------------------------------------------------------------------ marker listeners
-
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
         if (marker.isInfoWindowShown()) marker.hideInfoWindow();
@@ -205,8 +189,6 @@ public class Fragment5 extends Fragment
     public void onMarkerDragEnd(@NonNull Marker marker) {
         if (controller != null) controller.onMarkerDragEnd(marker);
     }
-
-    // ------------------------------------------------------------------ couleur
 
     private float hueFor(Priority priority) {
         if (priority == null) return BitmapDescriptorFactory.HUE_GREEN;

@@ -19,7 +19,6 @@ public class IssueManager implements ModelObservable {
         return issueList;
     }
 
-    // Appelé quand un marker est déplacé : met à jour la géoloc et notifie les vues
     public void setGeoLocation(Issue issue, double latitude, double longitude) {
         issue.setLatitude(latitude);
         issue.setLongitude(longitude);

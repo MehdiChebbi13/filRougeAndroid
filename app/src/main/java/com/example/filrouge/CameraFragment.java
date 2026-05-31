@@ -36,14 +36,12 @@ public class CameraFragment extends Fragment {
     private final String TAG = "frallo " + getClass().getSimpleName();
 
     private ImageView picture;
-    private boolean isPictureTaken       = true; // true = ne pas ouvrir la caméra automatiquement
+    private boolean isPictureTaken       = true; 
     private boolean isFirstLaunchChecked = false;
     private File    photoFile;
     private Picturable picturable;
 
     public CameraFragment() {}
-
-    // ------------------------------------------------------------------ lifecycle
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,8 +54,6 @@ public class CameraFragment extends Fragment {
             if (filePath != null) photoFile = new File(filePath);
         }
 
-        // Écoute le canal "picture_channel" : Fragment4 nous envoie
-        // le chemin d'une photo existante à afficher
         getParentFragmentManager().setFragmentResultListener(
                 "picture_channel", this, (requestKey, result) -> {
                     String path = result.getString("photo_path");
@@ -97,14 +93,12 @@ public class CameraFragment extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_camera, container, false);
         picture = layout.findViewById(R.id.picture);
 
-        // Restauration après rotation
         if (savedInstanceState != null && isPictureTaken
                 && photoFile != null && photoFile.exists()) {
             Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
             picture.setImageBitmap(bitmap);
         }
 
-        // Bouton pour (re)prendre une photo
         layout.findViewById(R.id.takePicture).setOnClickListener(v -> {
             isFirstLaunchChecked = false;
             isPictureTaken       = false;
@@ -127,8 +121,6 @@ public class CameraFragment extends Fragment {
         outState.putBoolean(FIRST_LAUNCH, isFirstLaunchChecked);
         if (photoFile != null) outState.putString(PHOTOFILE_PATH, photoFile.getAbsolutePath());
     }
-
-    // ------------------------------------------------------------------ caméra
 
     private void tryToTakePicture() {
         if (!isFirstLaunchChecked && !isPictureTaken) {
@@ -162,14 +154,12 @@ public class CameraFragment extends Fragment {
                     isPictureTaken = true;
                     Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                     picture.setImageBitmap(bitmap);
-                    // Notifie ControlActivity avec le chemin de la photo
+
                     picturable.onPictureTaken(photoFile.getAbsolutePath());
                 } else {
                     Log.d(TAG, "Photo annulée.");
                 }
             });
-
-    // ------------------------------------------------------------------ permissions
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {

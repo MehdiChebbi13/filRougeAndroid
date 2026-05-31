@@ -5,7 +5,6 @@ import com.example.filrouge.Services.EmergencyService;
 
 public class UrbanFactory implements AccidentFactory {
 
-    // Geolocation defaults: random position within roughly +/- 5 km of Paris.
     private static final double BASE_LAT = 48.8566;
     private static final double BASE_LNG = 2.3522;
     private static final double SPREAD  = 0.05;

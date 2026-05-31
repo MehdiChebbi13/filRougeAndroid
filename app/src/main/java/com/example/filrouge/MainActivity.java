@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Demande la permission POST_NOTIFICATIONS (Android 13+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             notifPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.imageViewEarth);
         imageView.setImageResource(R.drawable.animation);
         AnimationDrawable animationDrawable = (AnimationDrawable) imageView.getDrawable();
-        
+
         if (animationDrawable != null) {
             imageView.post(animationDrawable::start);
         }
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnOption1 = findViewById(R.id.btn_option1);
         btnOption1.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, ControlActivity.class);
-            // Index 4 = Fragment5 (Carte des incidents) in ControlActivity.tabFragments
+
             intent.putExtra(ControlActivity.EXTRA_INDEX, 4);
             startActivity(intent);
         });
